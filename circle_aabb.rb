@@ -50,17 +50,17 @@ def distance_to_segment(seg_start, seg_end, point)
 end
 
 def circle_aabb_overlap?(circle, aabb)
-  return "contained" if aabb.contains? circle.centre
-  return "one" if distance_to_segment(aabb.position,
+  return true if aabb.contains? circle.centre
+  return true if distance_to_segment(aabb.position,
                                      aabb.position+Point.new(aabb.width,0),
                                      circle.centre) <= circle.radius
-  return "two" if distance_to_segment(aabb.position+Point.new(aabb.width,0),
+  return true if distance_to_segment(aabb.position+Point.new(aabb.width,0),
                                      aabb.position+Point.new(aabb.width,aabb.width),
                                      circle.centre) <= circle.radius
-  return "three" if distance_to_segment(aabb.position+Point.new(aabb.width,aabb.width),
+  return true if distance_to_segment(aabb.position+Point.new(aabb.width,aabb.width),
                                      aabb.position+Point.new(0,aabb.width),
                                      circle.centre) <= circle.radius
-  return "four" if distance_to_segment(aabb.position+Point.new(0,aabb.width),
+  return true if distance_to_segment(aabb.position+Point.new(0,aabb.width),
                                      aabb.position,
                                      circle.centre) <= circle.radius
   return false
