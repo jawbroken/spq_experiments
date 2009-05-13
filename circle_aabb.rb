@@ -7,14 +7,17 @@ class Point
     @x*other.x + @y*other.y
   end
   def cross(other)
-    @x*other.y - @x*other.x
+    @x*other.y - @y*other.x
   end
   def +(other)
-    new Point(@x+other.x, @y+other.y)
+    Point.new(@x+other.x, @y+other.y)
   end
   def -(other)
-    new Point(@x-other.x, @y-other.y)
-  end  
+    Point.new(@x-other.x, @y-other.y)
+  end
+  def distance(other)
+    Math::sqrt((@x-other.x)**2+(@y-other.y)**2)
+  end
 end
 
 class Circle
