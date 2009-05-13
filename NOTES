@@ -4,3 +4,11 @@ Would allow fast construction by merging with minimal temporary nodes.
 
 On checking, unsurprisingly this already exists (Morton Number (number theory)).
 See: graphics.standford.edu/~seander/bithacks.html for some methods.
+
+Dimensions: would 16bits for x and y coordinates be enough?
+Map dimension of 65536x65536
+Depends on screen and character scale.
+128x128 512 pixel square screens
+64x128 1024x512px ultra-widescreen screens
+
+1024x512 is a pretty kicking rad screen size, tbh.
