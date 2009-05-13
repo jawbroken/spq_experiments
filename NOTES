@@ -12,3 +12,7 @@ Depends on screen and character scale.
 64x128 1024x512px ultra-widescreen screens
 
 1024x512 is a pretty kicking rad screen size, tbh.
+
+Prototypes to write:
+Interactive construction/destruction with dynamic quadtree modification
+Collision tests for circles, AABBs, other primitives(?)
