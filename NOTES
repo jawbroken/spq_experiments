@@ -1,3 +1,5 @@
 Bottom up traversal:
 Essentially means incrementing a number made by interleaving the bits of x and y co-ordinates: like a space-filling curve.
 Would allow fast construction by merging with minimal temporary nodes.
+
+On checking, unsurprisingly this already exists (Morton Number (number theory)).
