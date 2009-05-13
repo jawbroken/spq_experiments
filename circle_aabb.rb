@@ -34,5 +34,37 @@ class AABB
   def initialize(position, width)
     @position = position; @width = width
   end
+  def contains?(point)
+    (@position.x..@position.x+@width).include? point.x and
+      (@position.y..@position.y+@width).include? point.y
+  end
 end
+
+def distance_to_segment(seg_start, seg_end, point)
+  start_end = seg_end-seg_start
+  start_point = point-seg_start
+  dist = (point-seg_end).cross(start_point).to_f / seg_end.distance(seg_start)
+  return seg_end.distance(point) if (point-seg_end).dot(start_end) > 0
+  return seg_start.distance(point) if (point-seg_start).dot(seg_start-seg_end) > 0
+  return dist.abs
+end
+
+def circle_aabb_overlap?(circle, aabb)
+  return "contained" if aabb.contains? circle.centre
+  return "one" if distance_to_segment(aabb.position,
+                                     aabb.position+Point.new(aabb.width,0),
+                                     circle.centre) <= circle.radius
+  return "two" if distance_to_segment(aabb.position+Point.new(aabb.width,0),
+                                     aabb.position+Point.new(aabb.width,aabb.width),
+                                     circle.centre) <= circle.radius
+  return "three" if distance_to_segment(aabb.position+Point.new(aabb.width,aabb.width),
+                                     aabb.position+Point.new(0,aabb.width),
+                                     circle.centre) <= circle.radius
+  return "four" if distance_to_segment(aabb.position+Point.new(0,aabb.width),
+                                     aabb.position,
+                                     circle.centre) <= circle.radius
+  return false
+end
+
+
 
