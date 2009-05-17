@@ -16,3 +16,4 @@ Depends on screen and character scale.
 Prototypes to write:
 Interactive construction/destruction with dynamic quadtree modification
 Collision tests for circles, AABBs, other primitives(?)
+Try chipmunk physics integration
