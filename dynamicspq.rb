@@ -66,6 +66,57 @@ def destroy_quadtree(qt, centre, radius)
   destroy_quadtree_r(qt, 0, 0, 512, centre, radius)
 end
 
+# terrible code duplication :(
+# but it is a hacky prototype so whatever
+def construct_quadtree(qt, centre, radius)
+  def construct_quadtree_r(qt, x, y, w, centre, radius)
+    # Cases: Not overlapping - do nothing
+    #        Fully overlapping - delete all subtrees, replace with leaf
+    #        Partial overlap - subdivide and recur
+    #        Can replace full and partial overlap cases by merging if all
+    #        children are leaves. Inefficient though as it subdivides to 
+    #        1 pixel. Don't do this in a real implementation.
+    if w == 1
+      if in_circle(x, w, centre, radius)
+        Quadtree.new(1, nil, nil, nil, nil)
+      else
+        Quadtree.new(0, nil, nil, nil, nil)
+      end
+    end
+    if in_circle(x, y, centre, radius) and in_circle(x, y+w, centre, radius) and in_circle(x+w, y, centre, radius) and in_circle(x+w, y+w, centre, radius)
+      #full overlap
+      return Quadtree.new(1, nil, nil, nil, nil)
+    elsif circle_aabb_overlap?(Circle.new(Point.new(centre[0], centre[1]), radius),
+      AABB.new(Point.new(x, y), w))
+      #partial overlap
+      #subdivide leaf nodes and recur
+      if leaf_node(qt)
+        oldval = qt.value
+        qt = Quadtree.new(nil, Quadtree.new(oldval,nil,nil,nil,nil),
+          Quadtree.new(oldval,nil,nil,nil,nil), Quadtree.new(oldval,nil,nil,nil,nil),
+          Quadtree.new(oldval,nil,nil,nil,nil))
+      end
+      tlchild = construct_quadtree_r(qt.topleft,x,y,w/2,centre,radius)
+      trchild = construct_quadtree_r(qt.topright,x+w/2,y,w/2,centre,radius)
+      blchild = construct_quadtree_r(qt.bottomleft,x,y+w/2,w/2,centre,radius)
+      brchild = construct_quadtree_r(qt.bottomright,x+w/2,y+w/2,w/2,centre,radius)
+      if leaf_node(tlchild) and leaf_node(trchild) and leaf_node(blchild) and leaf_node(brchild)
+        sum = tlchild.value+trchild.value+blchild.value+brchild.value
+        if sum == 0 #all black
+          return Quadtree.new(0, nil, nil, nil, nil)
+        elsif sum == 4 # all white
+          return Quadtree.new(1, nil, nil, nil, nil)
+        end
+      end
+      return Quadtree.new(nil, tlchild, trchild, blchild, brchild)
+    else
+      #no overlap
+      return qt
+    end
+  end
+  construct_quadtree_r(qt, 0, 0, 512, centre, radius)
+end
+
 #############################
 # bunch of hacky GL code here
 require 'rubygems'
@@ -178,6 +229,11 @@ mouse = lambda do |button, state, x, y|
   if state == GLUT_UP and button == GLUT_LEFT_BUTTON
     $qmutex.synchronize do
       $quadtree = destroy_quadtree($quadtree, [x,y], $cursor_radius)
+    end
+  end
+  if state == GLUT_UP and button == GLUT_RIGHT_BUTTON
+    $qmutex.synchronize do
+      $quadtree = construct_quadtree($quadtree, [x,y], $cursor_radius)
     end
   end
 end
