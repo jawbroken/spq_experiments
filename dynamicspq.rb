@@ -26,10 +26,10 @@ def destroy_quadtree(qt, centre, radius)
     #        children are leaves. Inefficient though as it subdivides to 
     #        1 pixel. Don't do this in a real implementation.
     if w == 1
-      if in_circle(x, y, centre, radius)
-        Quadtree.new(0, nil, nil, nil, nil)
+      if in_circle(x, y, centre, radius) and qt.value != 0
+        return Quadtree.new(0, nil, nil, nil, nil)
       else
-        Quadtree.new(1, nil, nil, nil, nil)
+        return qt
       end
     end
     if in_circle(x, y, centre, radius) and in_circle(x, y+w, centre, radius) and in_circle(x+w, y, centre, radius) and in_circle(x+w, y+w, centre, radius)
@@ -77,10 +77,10 @@ def construct_quadtree(qt, centre, radius)
     #        children are leaves. Inefficient though as it subdivides to 
     #        1 pixel. Don't do this in a real implementation.
     if w == 1
-      if in_circle(x, y, centre, radius)
-        Quadtree.new(1, nil, nil, nil, nil)
+      if in_circle(x, y, centre, radius) and qt.value != 1
+        return Quadtree.new(1, nil, nil, nil, nil)
       else
-        Quadtree.new(0, nil, nil, nil, nil)
+        return qt
       end
     end
     if in_circle(x, y, centre, radius) and in_circle(x, y+w, centre, radius) and in_circle(x+w, y, centre, radius) and in_circle(x+w, y+w, centre, radius)
